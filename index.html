@@ -11,7 +11,7 @@ body{font-family:'Inter',sans-serif;background:#000;color:#fff;overflow-x:hidden
 a{text-decoration:none;color:inherit;}
 
 /* Page wrapper - mobile-first narrow layout like the original */
-.page{max-width:480px;margin:0 auto;background:#0a0a0a;position:relative;min-height:100vh;}
+.page{max-width:390px;margin:0 auto;background:#0a0a0a;position:relative;min-height:100vh;}
 
 /* Animations */
 @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
@@ -33,26 +33,60 @@ a{text-decoration:none;color:inherit;}
 .btn-gs:hover{background:linear-gradient(135deg,#e8bc30,#d4a82a);transform:translateY(-1px);}
 
 /* ===== HERO ===== */
-.hero{position:relative;background:#080808;padding:0;text-align:center;overflow:hidden;min-height:400px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
+.hero{position:relative;background:#080808;padding:0;text-align:center;overflow:hidden;min-height:370px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
 .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center top;}
 .hero-bg::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.2) 40%,rgba(0,0,0,0.15) 60%,rgba(8,8,8,0.8) 85%,#0a0a0a 100%);}
-.hero-text{position:relative;z-index:2;padding:30px 16px 0;}
-.hero-sub{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;color:#fff;letter-spacing:1px;}
-.hero-main{font-family:'Oswald',sans-serif;font-size:32px;font-weight:900;text-transform:uppercase;color:#d4a82a;letter-spacing:1px;line-height:1.1;margin-top:4px;text-shadow:0 2px 20px rgba(0,0,0,0.8),0 0 40px rgba(212,168,42,0.2);}
+.hero-text{position:relative;z-index:2;padding:24px 16px 0;}
+.hero-sub{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;text-transform:uppercase;color:#fff;letter-spacing:1px;}
+.hero-main{font-family:'Oswald',sans-serif;font-size:40px;font-weight:900;text-transform:uppercase;color:#d4a82a;letter-spacing:0.8px;line-height:1.05;margin-top:2px;text-shadow:0 2px 20px rgba(0,0,0,0.8),0 0 40px rgba(212,168,42,0.2);}
 
 /* ===== PRIZE STRUCTURE ===== */
-.prize-section{padding:30px 16px;text-align:center;margin-top:-40px;position:relative;z-index:3;}
-.prize-box{border:1.5px solid rgba(212,168,42,0.4);border-radius:12px;padding:24px 16px;background:rgba(10,10,10,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.prize-section{padding:22px 14px;text-align:center;margin-top:-26px;position:relative;z-index:3;}
+.prize-box{border:1.5px solid rgba(212,168,42,0.38);border-radius:10px;padding:18px 12px;background:rgba(10,10,10,0.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
 .prize-label{font-family:'Oswald',sans-serif;font-size:13px;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;font-weight:700;}
-.prize-amount{font-family:'Oswald',sans-serif;font-size:20px;font-weight:800;line-height:1.3;text-transform:uppercase;}
+.prize-amount{font-family:'Oswald',sans-serif;font-size:18px;font-weight:800;line-height:1.25;text-transform:uppercase;}
 .prize-amount .gold{color:#d4a82a;}
-.prize-sub{font-size:11px;color:#bbb;margin-top:6px;margin-bottom:16px;font-weight:600;}
-.prize-checks{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;text-align:left;margin-bottom:20px;padding:0 8px;}
-.prize-check{font-size:11px;color:#ccc;display:flex;align-items:flex-start;gap:6px;}
+.prize-sub{font-size:10px;color:#bbb;margin-top:5px;margin-bottom:12px;font-weight:600;}
+.prize-checks{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;text-align:left;margin-bottom:14px;padding:0 6px;}
+.prize-check{font-size:10px;color:#ccc;display:flex;align-items:flex-start;gap:5px;}
 .prize-check .ck{color:#d4a82a;font-size:12px;flex-shrink:0;margin-top:1px;}
-.btn-cta{display:inline-block;background:linear-gradient(180deg,#e8d44a,#c4b030,#9a8a20);color:#000;font-family:'Oswald',sans-serif;font-weight:700;font-size:15px;padding:12px 48px;border-radius:6px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.3s;text-decoration:none;box-shadow:0 2px 10px rgba(212,168,42,0.3);}
+.btn-cta{display:inline-block;background:linear-gradient(180deg,#e8d44a,#c4b030,#9a8a20);color:#000;font-family:'Oswald',sans-serif;font-weight:700;font-size:14px;padding:11px 40px;border-radius:6px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.3s;text-decoration:none;box-shadow:0 2px 10px rgba(212,168,42,0.3);}
 .btn-cta:hover{background:linear-gradient(180deg,#f0e050,#d4b830);transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,168,42,0.4);}
+.prize-section .btn-cta{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  border-radius:8px;
+  box-shadow:0 2px 10px rgba(212,168,42,0.3),inset 0 1px 0 rgba(255,255,255,0.22);
+  animation:ctaGlowPulse 3.2s ease-in-out infinite;
+}
+.prize-section .btn-cta:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.02);
+}
+.prize-section .btn-cta::before{
+  content:'';
+  position:absolute;
+  top:-60%;
+  left:-120%;
+  width:55%;
+  height:220%;
+  background:linear-gradient(115deg,transparent 0%,rgba(255,255,255,0.05) 35%,rgba(255,255,255,0.38) 50%,rgba(255,255,255,0.05) 65%,transparent 100%);
+  transform:skewX(-18deg);
+  animation:ctaShimmerSweep 4.2s cubic-bezier(.22,.61,.36,1) infinite;
+  z-index:-1;
+  pointer-events:none;
+}
+@keyframes ctaShimmerSweep{
+  0%{left:-130%;}
+  55%{left:130%;}
+  100%{left:130%;}
+}
+@keyframes ctaGlowPulse{
+  0%,100%{box-shadow:0 2px 10px rgba(212,168,42,0.3),0 0 0 rgba(212,168,42,0),inset 0 1px 0 rgba(255,255,255,0.22);}
+  50%{box-shadow:0 4px 16px rgba(232,212,74,0.38),0 0 10px rgba(232,212,74,0.16),inset 0 1px 0 rgba(255,255,255,0.28);}
+}
 
 /* ===== HOW IT WORKS ===== */
 .hiw{padding:40px 16px;text-align:center;background:#0d0d0d;}
@@ -171,9 +205,10 @@ a{text-decoration:none;color:inherit;}
 .fund-row{display:flex;align-items:center;justify-content:center;gap:10px;}
 .fund-box{background:#111;border:1px solid #222;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;transition:all 0.2s;flex:1;}
 .fund-box:hover{border-color:#d4a82a;}
-.fund-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;}
-.fund-icon.paypal{background:#003087;color:#fff;}
-.fund-icon.usdt{background:#26a17b;color:#fff;}
+.fund-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:#0f0f0f;border:1px solid rgba(255,255,255,0.08);}
+.fund-icon img{width:100%;height:100%;object-fit:cover;display:block;}
+.fund-icon.stack{width:58px;height:28px;border:none;background:transparent;gap:4px;overflow:visible;}
+.fund-icon.stack img{width:27px;height:27px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:#0f0f0f;}
 .fund-txt{font-weight:700;font-size:11px;}
 .fund-arrow{color:#d4a82a;font-size:16px;flex-shrink:0;}
 .fund-desc{font-size:9px;color:#666;margin-top:6px;line-height:1.4;display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;}
@@ -211,6 +246,112 @@ a{text-decoration:none;color:inherit;}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:#000;}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
+
+/* ===== PREMIUM INTERACTION POLISH ===== */
+:root{
+  --gold:#d4a82a;
+  --gold-soft:rgba(212,168,42,0.22);
+  --card-bg:#111;
+  --card-border:#1f1f1f;
+  --card-border-hover:rgba(212,168,42,0.6);
+}
+body{
+  background:
+    radial-gradient(900px 320px at 50% -180px,rgba(212,168,42,0.1),transparent 70%),
+    #000;
+}
+section{
+  position:relative;
+}
+section::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:16px;
+  right:16px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,168,42,0.24),transparent);
+  opacity:.35;
+  pointer-events:none;
+}
+.prize-box,.step,.ref-box,.lb-item,.game-card,.sched-item,.fund-box,.test-card,.bd-total{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  background:linear-gradient(180deg,rgba(20,20,20,0.96),rgba(13,13,13,0.96));
+  border-color:var(--card-border);
+  box-shadow:0 10px 24px rgba(0,0,0,0.28);
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,filter .28s ease;
+}
+.prize-box::after,.step::after,.ref-box::after,.lb-item::after,.game-card::after,.sched-item::after,.fund-box::after,.test-card::after,.bd-total::after{
+  content:'';
+  position:absolute;
+  top:-120%;
+  left:-60%;
+  width:60%;
+  height:260%;
+  transform:rotate(20deg);
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,0.1),transparent);
+  opacity:0;
+  transition:opacity .3s ease,left .6s ease;
+  pointer-events:none;
+}
+.prize-box:hover,.step:hover,.ref-box:hover,.lb-item:hover,.game-card:hover,.sched-item:hover,.fund-box:hover,.test-card:hover,.bd-total:hover{
+  transform:translateY(-3px);
+  border-color:var(--card-border-hover);
+  box-shadow:0 14px 28px rgba(0,0,0,0.36),0 0 0 1px rgba(212,168,42,0.15) inset;
+  filter:brightness(1.02);
+}
+.prize-box:hover::after,.step:hover::after,.ref-box:hover::after,.lb-item:hover::after,.game-card:hover::after,.sched-item:hover::after,.fund-box:hover::after,.test-card:hover::after,.bd-total:hover::after{
+  opacity:.8;
+  left:120%;
+}
+.btn-gs,.btn-copy,.tab,.btn-cta{
+  transition:transform .2s ease,filter .2s ease,box-shadow .25s ease,background .25s ease,color .25s ease;
+}
+.btn-gs:hover,.btn-copy:hover,.btn-cta:hover{
+  filter:saturate(1.08);
+}
+.btn-gs:active,.btn-copy:active,.btn-cta:active{
+  transform:translateY(1px) scale(.985);
+}
+.tab{
+  border:1px solid transparent;
+}
+.tab:hover:not(.active){
+  border-color:rgba(212,168,42,0.35);
+  background:rgba(212,168,42,0.08);
+}
+.tab.active{
+  box-shadow:0 0 0 1px rgba(0,0,0,0.25) inset,0 6px 16px rgba(212,168,42,0.25);
+}
+.w-row{
+  border-radius:6px;
+}
+.w-row:hover{
+  box-shadow:0 0 0 1px rgba(212,168,42,0.15) inset;
+}
+.mlb-table tr{
+  transition:background .22s ease,transform .22s ease;
+}
+.mlb-table tr:hover{
+  background:rgba(212,168,42,0.04);
+}
+.sec-title{
+  text-shadow:0 8px 24px rgba(0,0,0,0.3);
+}
+.footer-cta{
+  background:
+    radial-gradient(700px 260px at 50% 0%,rgba(212,168,42,0.12),transparent 65%),
+    linear-gradient(180deg,#0a0a0a 0%,#0c1a2e 100%);
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
 
 /* ===== RESPONSIVE LAYOUT ===== */
 @media (min-width:768px){
@@ -250,6 +391,7 @@ a{text-decoration:none;color:inherit;}
   .prize-checks{gap:10px 20px;}
   .prize-check{font-size:13px;}
   .btn-cta{font-size:16px;padding:14px 58px;}
+  .prize-section .btn-cta{font-size:16px;padding:15px 58px;}
 
   .sec-title{font-size:32px;}
   .steps{gap:16px;}
@@ -613,9 +755,9 @@ a{text-decoration:none;color:inherit;}
       <div class="fund-label">USDT/USDC STABLECOINS</div>
     </div>
     <div class="fund-row">
-      <div class="fund-box"><div class="fund-icon paypal">P</div><div class="fund-txt">PayPal</div></div>
+      <div class="fund-box"><div class="fund-icon paypal"><img src="logo-paypal.png" alt="PayPal"></div><div class="fund-txt">PayPal</div></div>
       <div class="fund-arrow">➜</div>
-      <div class="fund-box"><div class="fund-icon usdt">$</div><div class="fund-txt">USDT/USDC</div></div>
+      <div class="fund-box"><div class="fund-icon stack"><img src="logo-usdt.png" alt="USDT"><img src="logo-usdc.png" alt="USDC"></div><div class="fund-txt">USDT/USDC</div></div>
     </div>
     <div class="fund-desc">
       <span></span>
@@ -625,9 +767,9 @@ a{text-decoration:none;color:inherit;}
   <div class="fund-section anim">
     <div class="fund-label">FROM GAME (REDEMPTION)</div>
     <div class="fund-row">
-      <div class="fund-box"><div class="fund-icon usdt">$</div><div class="fund-txt">Stablecoins</div></div>
+      <div class="fund-box"><div class="fund-icon stack"><img src="logo-usdt.png" alt="USDT"><img src="logo-usdc.png" alt="USDC"></div><div class="fund-txt">Stablecoins</div></div>
       <div class="fund-arrow">➜</div>
-      <div class="fund-box"><div class="fund-icon paypal">P</div><div class="fund-txt">PayPal</div></div>
+      <div class="fund-box"><div class="fund-icon paypal"><img src="logo-paypal.png" alt="PayPal"></div><div class="fund-txt">PayPal</div></div>
     </div>
     <div class="fund-desc">
       <span>Secure and instant transfers, no fees, and stablecoins</span>
