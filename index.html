@@ -3,23 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="BenchBrawl fantasy baseball with seasonal prizes, live matchups, and referral rewards.">
+<meta name="theme-color" content="#0a0a0a">
 <title>Bench Brawl - Fantasy Baseball</title>
+<link rel="preload" as="image" href="Hero.png">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Inter',sans-serif;background:#000;color:#fff;overflow-x:hidden;}
+html{scroll-behavior:smooth;}
 a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid rgba(212,168,42,0.95);
+  outline-offset:2px;
+  border-radius:6px;
+}
 
 /* Page wrapper - mobile-first narrow layout like the original */
-.page{max-width:390px;margin:0 auto;background:#0a0a0a;position:relative;min-height:100vh;}
+.page{max-width:390px;margin:0 auto;background:#0a0a0a;position:relative;min-height:100vh;overflow:hidden;}
+.skip-link{
+  position:fixed;
+  top:10px;
+  left:10px;
+  z-index:500;
+  padding:8px 10px;
+  background:#d4a82a;
+  color:#000;
+  font-weight:700;
+  border-radius:6px;
+  transform:translateY(-140%);
+  transition:transform .2s ease;
+}
+.skip-link:focus{transform:translateY(0);}
 
 /* Animations */
-@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 @keyframes glow{0%,100%{box-shadow:0 0 8px rgba(201,168,46,0.2)}50%{box-shadow:0 0 20px rgba(201,168,46,0.5)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-.anim{animation:fadeInUp 0.6s ease-out both}
+.anim{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.anim.vis{opacity:1;transform:translateY(0);}
 
 /* ===== HEADER ===== */
 .header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(10,10,10,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.05);}
@@ -241,6 +266,37 @@ a{text-decoration:none;color:inherit;}
 /* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#d4a82a;color:#000;padding:10px 20px;border-radius:6px;font-weight:700;font-size:12px;transition:transform 0.3s;z-index:200;}
 .toast.show{transform:translateX(-50%) translateY(0);}
+.scroll-progress{
+  position:fixed;
+  top:0;
+  left:0;
+  height:3px;
+  width:0%;
+  z-index:250;
+  background:linear-gradient(90deg,#d4a82a,#f0e050);
+  box-shadow:0 0 8px rgba(212,168,42,0.55);
+}
+.scroll-top{
+  position:fixed;
+  right:14px;
+  bottom:18px;
+  width:38px;
+  height:38px;
+  border:none;
+  border-radius:50%;
+  background:linear-gradient(180deg,#e8d44a,#c4b030,#9a8a20);
+  color:#111;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(0,0,0,0.35);
+  opacity:0;
+  transform:translateY(10px);
+  pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease,filter .25s ease;
+  z-index:220;
+}
+.scroll-top.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.scroll-top:hover{filter:brightness(1.06);}
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:4px;}
@@ -250,19 +306,48 @@ a{text-decoration:none;color:inherit;}
 /* ===== PREMIUM INTERACTION POLISH ===== */
 :root{
   --gold:#d4a82a;
+  --gold-bright:#f0e050;
   --gold-soft:rgba(212,168,42,0.22);
+  --ink-0:#050505;
+  --ink-1:#0a0a0a;
+  --ink-2:#101318;
   --card-bg:#111;
   --card-border:#1f1f1f;
   --card-border-hover:rgba(212,168,42,0.6);
+  --bg-fog-top:radial-gradient(760px 320px at 50% -140px,rgba(132,179,255,0.14),transparent 72%);
+  --bg-fog-bottom:radial-gradient(900px 420px at 50% 115%,rgba(35,117,193,0.18),transparent 75%);
+  --section-divider:linear-gradient(90deg,transparent,rgba(212,168,42,0.24),transparent);
+  --surface-glass:linear-gradient(180deg,rgba(20,20,20,0.96),rgba(13,13,13,0.96));
 }
 body{
   background:
     radial-gradient(900px 320px at 50% -180px,rgba(212,168,42,0.1),transparent 70%),
     #000;
 }
-section{
-  position:relative;
+.page::before,.page::after{
+  content:'';
+  position:absolute;
+  left:0;
+  right:0;
+  pointer-events:none;
+  z-index:0;
 }
+.page::before{
+  top:0;
+  height:640px;
+  background:
+    radial-gradient(540px 220px at 50% 0,rgba(224,235,255,0.15),transparent 68%),
+    linear-gradient(180deg,rgba(4,9,16,0.65),rgba(4,8,14,0.28) 46%,rgba(10,10,10,0.9) 100%);
+}
+.page::after{
+  bottom:0;
+  height:420px;
+  background:
+    radial-gradient(620px 240px at 50% 100%,rgba(37,111,189,0.22),transparent 70%),
+    linear-gradient(180deg,transparent 0%,rgba(3,7,13,0.55) 46%,rgba(2,6,12,0.95) 100%);
+}
+.header,.hero,.prize-section,.hiw,.referral,.winners,.breakdown,.leaderboards,.mlb-data,.upcoming,.other-sched,.funding,.testimonials,.footer-cta{position:relative;z-index:1;}
+section{position:relative;}
 section::before{
   content:'';
   position:absolute;
@@ -270,15 +355,35 @@ section::before{
   left:16px;
   right:16px;
   height:1px;
-  background:linear-gradient(90deg,transparent,rgba(212,168,42,0.24),transparent);
+  background:var(--section-divider);
   opacity:.35;
   pointer-events:none;
+}
+.hero{
+  background:
+    var(--bg-fog-top),
+    linear-gradient(180deg,rgba(5,10,17,0.2) 0%,rgba(8,10,15,0.62) 55%,rgba(9,10,12,0.96) 100%);
+}
+.prize-section,.hiw,.referral,.winners,.breakdown,.leaderboards,.mlb-data,.upcoming,.other-sched,.funding,.testimonials{
+  background:
+    linear-gradient(180deg,rgba(8,10,14,0.74),rgba(8,10,12,0.9)),
+    var(--bg-fog-bottom);
+}
+.footer-cta{
+  background:
+    radial-gradient(740px 280px at 50% 0%,rgba(212,168,42,0.18),transparent 66%),
+    radial-gradient(780px 280px at 50% 112%,rgba(54,132,206,0.22),transparent 70%),
+    linear-gradient(180deg,#0a0a0a 0%,#0c1a2e 100%);
+}
+.winners,.breakdown,.leaderboards,.mlb-data,.upcoming,.other-sched,.funding,.testimonials,.footer-cta{
+  content-visibility:auto;
+  contain-intrinsic-size:720px;
 }
 .prize-box,.step,.ref-box,.lb-item,.game-card,.sched-item,.fund-box,.test-card,.bd-total{
   position:relative;
   overflow:hidden;
   isolation:isolate;
-  background:linear-gradient(180deg,rgba(20,20,20,0.96),rgba(13,13,13,0.96));
+  background:var(--surface-glass);
   border-color:var(--card-border);
   box-shadow:0 10px 24px rgba(0,0,0,0.28);
   transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,filter .28s ease;
@@ -340,11 +445,11 @@ section::before{
 .sec-title{
   text-shadow:0 8px 24px rgba(0,0,0,0.3);
 }
-.footer-cta{
-  background:
-    radial-gradient(700px 260px at 50% 0%,rgba(212,168,42,0.12),transparent 65%),
-    linear-gradient(180deg,#0a0a0a 0%,#0c1a2e 100%);
-}
+.hero-main,.sec-title,.prize-amount{text-shadow:0 10px 24px rgba(0,0,0,0.42);}
+.prize-check,.bd-label,.sched-sub,.fund-desc,.test-txt{color:#c2c6cc;}
+.w-name,.gm-team,.gm-right .team-name,.sched-tm,.fund-txt{color:#f1f4f7;}
+.w-hdr,.bd-sub,.fund-label,.gm-time,.gm-meta{color:#9098a6;}
+.lb-note{background:rgba(212,168,42,0.08);}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
@@ -355,15 +460,25 @@ section::before{
 
 /* ===== RESPONSIVE LAYOUT ===== */
 @media (min-width:768px){
-  body{background:
-    radial-gradient(1200px 500px at 50% -180px,rgba(212,168,42,0.18),transparent 60%),
-    #050505;}
+  body{
+    background:
+      radial-gradient(1200px 500px at 50% -180px,rgba(212,168,42,0.18),transparent 60%),
+      linear-gradient(180deg,#040607,#06090c);
+  }
   .page{
     max-width:980px;
     width:calc(100% - 48px);
     margin:24px auto;
     border:1px solid rgba(255,255,255,0.06);
     box-shadow:0 20px 80px rgba(0,0,0,0.45);
+  }
+  .page::before{height:760px;background:
+    radial-gradient(760px 300px at 50% 0,rgba(210,230,255,0.18),transparent 68%),
+    linear-gradient(180deg,rgba(3,8,15,0.72),rgba(4,9,15,0.38) 50%,rgba(8,8,10,0.9) 100%);
+  }
+  .page::after{height:520px;background:
+    radial-gradient(760px 300px at 50% 100%,rgba(39,118,198,0.28),transparent 68%),
+    linear-gradient(180deg,transparent 0%,rgba(3,7,13,0.56) 46%,rgba(2,6,12,0.96) 100%);
   }
   .header{padding:12px 20px;}
   .logo img{height:30px;}
@@ -453,6 +568,8 @@ section::before{
 
 @media (min-width:1200px){
   .page{max-width:1160px;}
+  .page::before{height:840px;}
+  .page::after{height:560px;}
   .hero{min-height:620px;}
   .hero-sub{font-size:40px;}
   .hero-main{font-size:64px;max-width:980px;}
@@ -467,7 +584,9 @@ section::before{
 </style>
 </head>
 <body>
-<div class="page">
+<a href="#mainContent" class="skip-link">Skip to content</a>
+<div class="scroll-progress" id="scrollProgress"></div>
+<main class="page" id="mainContent">
 
 <!-- HEADER -->
 <header class="header">
@@ -484,7 +603,7 @@ section::before{
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"><img src="Hero.png" alt="Baseball Players"></div>
+  <div class="hero-bg"><img src="Hero.png" alt="Baseball Players" loading="eager" decoding="async" fetchpriority="high"></div>
   <div class="hero-text">
     <p class="hero-sub anim">IT'S BASEBALL SEASON.</p>
     <h1 class="hero-main anim">TEXAS, <span style="color:#d4a82a">JOIN THE ACTION!</span></h1>
@@ -542,7 +661,7 @@ section::before{
     <div class="ref-link">
       <span>Share link:</span>
       <input type="text" value="https://icare.com/in287598/" readonly id="refLink">
-      <button class="btn-copy" onclick="copyLink()">📋 Copy</button>
+      <button class="btn-copy" onclick="copyLink(this)">📋 Copy</button>
     </div>
   </div>
 </section>
@@ -755,9 +874,9 @@ section::before{
       <div class="fund-label">USDT/USDC STABLECOINS</div>
     </div>
     <div class="fund-row">
-      <div class="fund-box"><div class="fund-icon paypal"><img src="logo-paypal.png" alt="PayPal"></div><div class="fund-txt">PayPal</div></div>
+      <div class="fund-box"><div class="fund-icon paypal"><img src="logo-paypal.png" alt="PayPal" loading="lazy" decoding="async"></div><div class="fund-txt">PayPal</div></div>
       <div class="fund-arrow">➜</div>
-      <div class="fund-box"><div class="fund-icon stack"><img src="logo-usdt.png" alt="USDT"><img src="logo-usdc.png" alt="USDC"></div><div class="fund-txt">USDT/USDC</div></div>
+      <div class="fund-box"><div class="fund-icon stack"><img src="logo-usdt.png" alt="USDT" loading="lazy" decoding="async"><img src="logo-usdc.png" alt="USDC" loading="lazy" decoding="async"></div><div class="fund-txt">USDT/USDC</div></div>
     </div>
     <div class="fund-desc">
       <span></span>
@@ -767,9 +886,9 @@ section::before{
   <div class="fund-section anim">
     <div class="fund-label">FROM GAME (REDEMPTION)</div>
     <div class="fund-row">
-      <div class="fund-box"><div class="fund-icon stack"><img src="logo-usdt.png" alt="USDT"><img src="logo-usdc.png" alt="USDC"></div><div class="fund-txt">Stablecoins</div></div>
+      <div class="fund-box"><div class="fund-icon stack"><img src="logo-usdt.png" alt="USDT" loading="lazy" decoding="async"><img src="logo-usdc.png" alt="USDC" loading="lazy" decoding="async"></div><div class="fund-txt">Stablecoins</div></div>
       <div class="fund-arrow">➜</div>
-      <div class="fund-box"><div class="fund-icon paypal"><img src="logo-paypal.png" alt="PayPal"></div><div class="fund-txt">PayPal</div></div>
+      <div class="fund-box"><div class="fund-icon paypal"><img src="logo-paypal.png" alt="PayPal" loading="lazy" decoding="async"></div><div class="fund-txt">PayPal</div></div>
     </div>
     <div class="fund-desc">
       <span>Secure and instant transfers, no fees, and stablecoins</span>
@@ -820,42 +939,40 @@ section::before{
     <div class="ref-link" style="margin-top:10px">
       <span>Share link:</span>
       <input type="text" value="https://icare.com/in287598/" readonly>
-      <button class="btn-copy" onclick="copyLink()">📋 Copy</button>
+      <button class="btn-copy" onclick="copyLink(this)">📋 Copy</button>
     </div>
   </div>
   <div class="watermark">BENCHBRAWL</div>
 </section>
 
-</div><!-- .page -->
+</main><!-- .page -->
 
 <!-- Toast -->
 <div class="toast" id="toast">Link copied to clipboard!</div>
+<button class="scroll-top" id="scrollTopBtn" aria-label="Back to top">↑</button>
 
 <script>
-// Scroll animations - using scroll listener as fallback for reliability
-function checkVisibility() {
-  const els = document.querySelectorAll('.anim:not(.vis)');
-  els.forEach(el => {
+// Scroll reveal animations
+function revealVisible() {
+  document.querySelectorAll('.anim:not(.vis)').forEach(el => {
     const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight - 30 && rect.bottom > 0) {
-      el.classList.add('vis');
-    }
+    if (rect.top < window.innerHeight - 24 && rect.bottom > 0) el.classList.add('vis');
   });
 }
-// Run on scroll, resize, and immediately
-window.addEventListener('scroll', checkVisibility, {passive:true});
-window.addEventListener('resize', checkVisibility);
-// Initial check after a short delay for DOM paint
-checkVisibility();
-setTimeout(checkVisibility, 100);
-setTimeout(checkVisibility, 500);
-
-// Also use IntersectionObserver where supported
 if ('IntersectionObserver' in window) {
   const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
-  }, {threshold: 0.05});
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('vis');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.08});
   document.querySelectorAll('.anim').forEach(el => obs.observe(el));
+} else {
+  window.addEventListener('scroll', revealVisible, {passive: true});
+  window.addEventListener('resize', revealVisible);
+  revealVisible();
 }
 
 // Tabs
@@ -869,9 +986,20 @@ function switchTab(btn){
 }
 
 // Copy
-function copyLink(){
-  const inp=document.getElementById('refLink');
-  if(inp){navigator.clipboard.writeText(inp.value).catch(()=>{inp.select();document.execCommand('copy')});}
+function copyLink(btn){
+  const scope = btn ? btn.closest('.ref-link') : document;
+  const inp = scope ? scope.querySelector('input') : document.getElementById('refLink');
+  if (!inp) return;
+  const text = inp.value;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(() => {
+      inp.select();
+      document.execCommand('copy');
+    });
+  } else {
+    inp.select();
+    document.execCommand('copy');
+  }
   const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);
 }
 
@@ -879,6 +1007,32 @@ function copyLink(){
 const pc=document.getElementById('prizeCounter');
 const pcObs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){let c=0;const iv=setInterval(()=>{c+=2;if(c>=100){c=100;clearInterval(iv)}pc.textContent='$'+c+'k'},16);pcObs.unobserve(el.target)}})},{threshold:0.5});
 pcObs.observe(pc);
+
+// Keyboard accessibility for clickable rows/cards
+document.querySelectorAll('.w-row,.sched-item').forEach(el => {
+  el.setAttribute('role', 'link');
+  el.setAttribute('tabindex', '0');
+  el.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter' || ev.key === ' ') {
+      ev.preventDefault();
+      el.click();
+    }
+  });
+});
+
+// Scroll progress + back-to-top
+const progressBar = document.getElementById('scrollProgress');
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+function updateScrollUi() {
+  const doc = document.documentElement;
+  const max = doc.scrollHeight - doc.clientHeight;
+  const percent = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+  progressBar.style.width = percent + '%';
+  scrollTopBtn.classList.toggle('show', doc.scrollTop > 360);
+}
+window.addEventListener('scroll', updateScrollUi, {passive:true});
+scrollTopBtn.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
+updateScrollUi();
 </script>
 </body>
 </html>
