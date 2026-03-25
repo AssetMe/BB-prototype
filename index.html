@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bench Brawl - Fantasy Baseball</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#000;color:#fff;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+
+/* Page wrapper - mobile-first narrow layout like the original */
+.page{max-width:480px;margin:0 auto;background:#0a0a0a;position:relative;min-height:100vh;}
+
+/* Animations */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@keyframes glow{0%,100%{box-shadow:0 0 8px rgba(201,168,46,0.2)}50%{box-shadow:0 0 20px rgba(201,168,46,0.5)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.anim{animation:fadeInUp 0.6s ease-out both}
+
+/* ===== HEADER ===== */
+.header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(10,10,10,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.05);}
+.logo{display:flex;align-items:center;}
+.logo img{height:24px;width:auto;}
+.hdr-right{display:flex;align-items:center;gap:8px;}
+.hdr-rating{font-size:9px;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:3px;}
+.hdr-stars{color:#d4a82a;font-size:10px;letter-spacing:-1px;}
+.hdr-tp{color:#00b67a;font-size:8px;font-weight:700;}
+.btn-gs{background:linear-gradient(135deg,#d4a82a,#b8922a);color:#000;font-family:'Oswald',sans-serif;font-weight:700;font-size:11px;padding:6px 14px;border-radius:4px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;transition:all 0.3s;}
+.btn-gs:hover{background:linear-gradient(135deg,#e8bc30,#d4a82a);transform:translateY(-1px);}
+
+/* ===== HERO ===== */
+.hero{position:relative;background:#080808;padding:0;text-align:center;overflow:hidden;min-height:400px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
+.hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center top;}
+.hero-bg::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.2) 40%,rgba(0,0,0,0.15) 60%,rgba(8,8,8,0.8) 85%,#0a0a0a 100%);}
+.hero-text{position:relative;z-index:2;padding:30px 16px 0;}
+.hero-sub{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;text-transform:uppercase;color:#fff;letter-spacing:1px;}
+.hero-main{font-family:'Oswald',sans-serif;font-size:32px;font-weight:900;text-transform:uppercase;color:#d4a82a;letter-spacing:1px;line-height:1.1;margin-top:4px;text-shadow:0 2px 20px rgba(0,0,0,0.8),0 0 40px rgba(212,168,42,0.2);}
+
+/* ===== PRIZE STRUCTURE ===== */
+.prize-section{padding:30px 16px;text-align:center;margin-top:-40px;position:relative;z-index:3;}
+.prize-box{border:1.5px solid rgba(212,168,42,0.4);border-radius:12px;padding:24px 16px;background:rgba(10,10,10,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.prize-label{font-family:'Oswald',sans-serif;font-size:13px;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;font-weight:700;}
+.prize-amount{font-family:'Oswald',sans-serif;font-size:20px;font-weight:800;line-height:1.3;text-transform:uppercase;}
+.prize-amount .gold{color:#d4a82a;}
+.prize-sub{font-size:11px;color:#bbb;margin-top:6px;margin-bottom:16px;font-weight:600;}
+.prize-checks{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;text-align:left;margin-bottom:20px;padding:0 8px;}
+.prize-check{font-size:11px;color:#ccc;display:flex;align-items:flex-start;gap:6px;}
+.prize-check .ck{color:#d4a82a;font-size:12px;flex-shrink:0;margin-top:1px;}
+.btn-cta{display:inline-block;background:linear-gradient(180deg,#e8d44a,#c4b030,#9a8a20);color:#000;font-family:'Oswald',sans-serif;font-weight:700;font-size:15px;padding:12px 48px;border-radius:6px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all 0.3s;text-decoration:none;box-shadow:0 2px 10px rgba(212,168,42,0.3);}
+.btn-cta:hover{background:linear-gradient(180deg,#f0e050,#d4b830);transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,168,42,0.4);}
+
+/* ===== HOW IT WORKS ===== */
+.hiw{padding:40px 16px;text-align:center;background:#0d0d0d;}
+.sec-title{font-family:'Oswald',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;margin-bottom:24px;}
+.sec-title .gold{color:#d4a82a;}
+.steps{display:flex;gap:10px;}
+.step{flex:1;background:#111;border:1px solid #222;border-radius:10px;padding:20px 10px 16px;position:relative;transition:all 0.3s;}
+.step:hover{border-color:#d4a82a;transform:translateY(-3px);}
+.step-num{width:28px;height:28px;background:#c0392b;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:14px;margin:0 auto 10px;}
+.step-icon{width:36px;height:36px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;}
+.step-icon svg{width:32px;height:32px;}
+.step h3{font-family:'Oswald',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:6px;color:#fff;}
+.step p{font-size:9px;color:#777;line-height:1.4;}
+
+/* ===== REFERRAL ===== */
+.referral{padding:40px 16px;text-align:center;background:linear-gradient(180deg,#0a0a0a,#0d0d0d);}
+.ref-box{border:1px solid rgba(212,168,42,0.25);border-radius:12px;padding:28px 16px;background:radial-gradient(ellipse at 50% 0%,rgba(212,168,42,0.05),transparent 60%);}
+.ref-box .sec-title{margin-bottom:6px;font-size:20px;line-height:1.2;}
+.ref-sub{font-size:11px;color:#d4a82a;text-transform:uppercase;letter-spacing:2px;font-weight:600;margin-bottom:14px;}
+.ref-desc{font-size:11px;color:#999;line-height:1.6;margin-bottom:20px;}
+.ref-desc strong{color:#d4a82a;}
+.ref-link{display:flex;align-items:center;gap:6px;background:#111;border:1px solid #333;border-radius:6px;padding:8px 12px;margin:0 auto;max-width:340px;}
+.ref-link span{color:#777;font-size:10px;white-space:nowrap;}
+.ref-link input{flex:1;background:none;border:none;color:#aaa;font-size:11px;outline:none;font-family:'Inter',sans-serif;}
+.btn-copy{background:#d4a82a;color:#000;border:none;padding:5px 12px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all 0.2s;white-space:nowrap;}
+.btn-copy:hover{background:#e8bc30;}
+
+/* ===== PAST WINNERS ===== */
+.winners{padding:40px 16px;text-align:center;background:#0d0d0d;}
+.tabs{display:inline-flex;background:#1a1a1a;border-radius:6px;overflow:hidden;margin-bottom:20px;}
+.tab{padding:8px 20px;font-size:11px;font-weight:600;cursor:pointer;color:#666;border:none;background:none;font-family:'Inter',sans-serif;transition:all 0.2s;}
+.tab.active{background:#d4a82a;color:#000;}
+.tab:hover:not(.active){color:#ccc;}
+.w-table{text-align:left;}
+.w-hdr{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid #333;font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;}
+.w-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid #1a1a1a;transition:all 0.2s;cursor:pointer;}
+.w-row:hover{background:rgba(212,168,42,0.03);padding-left:4px;}
+.w-rank{width:24px;font-family:'Oswald',sans-serif;font-weight:700;font-size:15px;color:#d4a82a;}
+.w-team{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;margin-right:10px;flex-shrink:0;}
+.w-name{flex:1;font-size:13px;font-weight:600;}
+.w-name .blur{filter:blur(4px);user-select:none;}
+.w-weekly{width:70px;text-align:right;font-weight:700;font-size:13px;color:#d4a82a;}
+.w-season{width:70px;text-align:right;font-weight:700;font-size:13px;color:#ccc;}
+.w-hdr .w-weekly,.w-hdr .w-season{font-weight:600;color:#666;}
+
+/* ===== PRIZES BREAKDOWN ===== */
+.breakdown{padding:40px 16px;text-align:center;background:#0a0a0a;}
+.bd-sub{font-family:'Oswald',sans-serif;font-size:10px;color:#666;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;}
+.bd-grid{margin-bottom:20px;}
+.bd-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #1a1a1a;}
+.bd-row:hover{padding-left:6px;transition:all 0.2s;}
+.bd-label{font-size:12px;color:#999;}
+.bd-label b{color:#fff;font-weight:600;}
+.bd-val{font-family:'Oswald',sans-serif;font-weight:700;font-size:15px;color:#d4a82a;}
+.bd-total{border:1px solid rgba(212,168,42,0.3);border-radius:10px;padding:16px;background:linear-gradient(135deg,rgba(212,168,42,0.08),transparent);text-align:center;}
+.bd-total-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:2px;}
+.bd-total-val{font-family:'Oswald',sans-serif;font-size:28px;font-weight:800;color:#d4a82a;margin-top:4px;}
+
+/* ===== LEADERBOARDS ===== */
+.leaderboards{padding:40px 16px;text-align:center;background:#0d0d0d;}
+.lb-tabs{margin-bottom:20px;}
+.lb-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.lb-item{display:flex;align-items:center;justify-content:space-between;background:#111;border:1px solid #1a1a1a;border-radius:6px;padding:8px 10px;transition:all 0.2s;cursor:pointer;}
+.lb-item:hover{border-color:#d4a82a;}
+.lb-l{display:flex;align-items:center;gap:6px;}
+.lb-rank{font-family:'Oswald',sans-serif;font-weight:700;color:#d4a82a;font-size:12px;width:16px;}
+.lb-name{font-size:10px;font-weight:500;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90px;}
+.lb-aura{font-family:'Oswald',sans-serif;font-weight:600;font-size:11px;color:#d4a82a;}
+.lb-note{grid-column:1/-1;background:rgba(212,168,42,0.06);border-radius:6px;padding:10px;margin-top:6px;font-size:10px;color:#999;display:flex;align-items:center;gap:6px;text-align:left;}
+.lb-note .ck{color:#d4a82a;}
+
+/* ===== MLB DATA ===== */
+.mlb-data{padding:40px 16px;text-align:center;background:#0a0a0a;}
+.mlb-table{width:100%;border-collapse:collapse;margin-top:16px;}
+.mlb-table th{font-size:8px;color:#666;text-transform:uppercase;letter-spacing:1px;padding:6px 4px;border-bottom:1px solid #333;font-weight:600;}
+.mlb-table td{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:#fff;padding:8px 4px;border-bottom:1px solid #1a1a1a;text-align:center;}
+.mlb-table td.gold{color:#d4a82a;}
+.mlb-table tr:hover td{background:rgba(212,168,42,0.03);}
+
+/* ===== UPCOMING GAMES ===== */
+.upcoming{padding:30px 16px;background:#0d0d0d;}
+.upcoming h3{font-family:'Oswald',sans-serif;font-size:16px;text-transform:uppercase;text-align:center;margin-bottom:16px;}
+.upcoming h3 .gold{color:#d4a82a;}
+.game-card{display:flex;align-items:center;justify-content:space-between;background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:12px;margin-bottom:8px;transition:all 0.2s;cursor:pointer;}
+.game-card:hover{border-color:#d4a82a;transform:translateX(3px);}
+.gm-team{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;flex:1;}
+.tm-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.gm-mid{text-align:center;padding:0 8px;}
+.gm-label{font-size:9px;color:#d4a82a;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+.gm-time{font-size:9px;color:#666;margin-top:2px;}
+.gm-right{text-align:right;flex:1;}
+.gm-right .team-name{font-size:12px;font-weight:600;}
+.gm-right .gm-meta{font-size:9px;color:#666;margin-top:2px;}
+
+/* ===== OTHER SCHEDULE ===== */
+.other-sched{padding:30px 16px;background:#0a0a0a;}
+.other-sched h3{font-family:'Oswald',sans-serif;font-size:16px;text-transform:uppercase;text-align:center;margin-bottom:16px;}
+.other-sched h3 .gold{color:#d4a82a;}
+.sched-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.sched-item{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:10px;transition:all 0.2s;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.sched-item:hover{border-color:#d4a82a;}
+.sched-badge{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;}
+.sched-info{flex:1;}
+.sched-tm{font-size:11px;font-weight:700;}
+.sched-sub{font-size:8px;color:#666;margin-top:2px;}
+.sched-total{grid-column:1/-1;border:1px solid rgba(212,168,42,0.3);border-radius:10px;padding:16px;text-align:center;background:linear-gradient(135deg,rgba(212,168,42,0.06),transparent);}
+.sched-total .lbl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:2px;font-weight:600;}
+.sched-total .val{font-family:'Oswald',sans-serif;font-size:32px;font-weight:800;color:#d4a82a;}
+
+/* ===== FUNDING ===== */
+.funding{padding:40px 16px;text-align:center;background:#0d0d0d;}
+.fund-section{margin-top:20px;}
+.fund-label{font-size:9px;color:#777;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:10px;}
+.fund-labels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.fund-labels .fund-label{margin-bottom:0;}
+.fund-row{display:flex;align-items:center;justify-content:center;gap:10px;}
+.fund-box{background:#111;border:1px solid #222;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;transition:all 0.2s;flex:1;}
+.fund-box:hover{border-color:#d4a82a;}
+.fund-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;}
+.fund-icon.paypal{background:#003087;color:#fff;}
+.fund-icon.usdt{background:#26a17b;color:#fff;}
+.fund-txt{font-weight:700;font-size:11px;}
+.fund-arrow{color:#d4a82a;font-size:16px;flex-shrink:0;}
+.fund-desc{font-size:9px;color:#666;margin-top:6px;line-height:1.4;display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;}
+
+/* ===== TESTIMONIALS ===== */
+.testimonials{padding:40px 16px;text-align:center;background:#0a0a0a;}
+.test-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px;}
+.test-card{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:16px 12px;text-align:left;transition:all 0.3s;}
+.test-card:hover{border-color:#d4a82a;transform:translateY(-2px);}
+.test-txt{font-size:10px;color:#999;line-height:1.5;font-style:italic;margin-bottom:10px;}
+.test-author{font-size:9px;color:#d4a82a;font-weight:700;}
+.verified{display:inline-flex;align-items:center;gap:6px;background:rgba(212,168,42,0.08);border:1px solid rgba(212,168,42,0.25);color:#d4a82a;padding:8px 16px;border-radius:20px;font-size:10px;font-weight:600;margin-top:16px;}
+
+/* ===== FOOTER CTA ===== */
+.footer-cta{padding:40px 16px 80px;text-align:center;background:linear-gradient(180deg,#0a0a0a 0%,#0c1a2e 100%);overflow:hidden;position:relative;}
+.footer-teams{display:flex;justify-content:center;gap:20px;margin-bottom:20px;}
+.ft-team{width:56px;height:56px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;background:#111;transition:all 0.3s;overflow:hidden;}
+.ft-team img{width:40px;height:40px;object-fit:contain;}
+.ft-team:hover{border-color:#d4a82a;transform:scale(1.1);}
+.footer-cta h2{font-family:'Oswald',sans-serif;font-size:24px;font-weight:800;text-transform:uppercase;}
+.footer-cta h2 .gold{color:#d4a82a;}
+.footer-cta .sub{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;margin-top:4px;}
+.footer-cta .sub .gold{color:#d4a82a;}
+.footer-cta .count{font-size:12px;color:#888;margin-top:6px;margin-bottom:24px;}
+.footer-cta .count span{color:#d4a82a;font-weight:700;}
+.footer-share{margin-top:24px;font-size:10px;color:#777;line-height:1.6;}
+.footer-share strong{color:#d4a82a;}
+.watermark{font-family:'Oswald',sans-serif;font-size:60px;font-weight:900;color:rgba(255,255,255,0.03);text-transform:uppercase;letter-spacing:8px;position:absolute;bottom:10px;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none;}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#d4a82a;color:#000;padding:10px 20px;border-radius:6px;font-weight:700;font-size:12px;transition:transform 0.3s;z-index:200;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:#000;}
+::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<header class="header">
+  <a href="https://benchbrawl.com/auth/auth0" class="logo">
+    <img src="https://benchbrawl.com/images/benchbrawl-across-f3fa81c58798b4798afff1fcb1cd52a9.svg?vsn=d" alt="BenchBrawl" width="124" height="32" loading="eager">
+  </a>
+  <div class="hdr-right">
+    <div class="hdr-rating">
+      Excellent 4.8 <span class="hdr-stars">★★★★★</span> <span class="hdr-tp">✦ Trustpilot</span>
+    </div>
+    <a href="https://benchbrawl.com/auth/auth0" class="btn-gs">Get Started</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"><img src="hero.jpg" alt="Baseball Players"></div>
+  <div class="hero-text">
+    <p class="hero-sub anim">IT'S BASEBALL SEASON.</p>
+    <h1 class="hero-main anim">TEXAS, <span style="color:#d4a82a">JOIN THE ACTION!</span></h1>
+  </div>
+</section>
+
+<!-- PRIZE STRUCTURE -->
+<section class="prize-section">
+  <div class="prize-box anim">
+    <div class="prize-label">PRIZE STRUCTURE</div>
+    <div class="prize-amount">UP TO <span class="gold">$15,000</span> IN SEASONAL CASH PRIZES PER SEASON</div>
+    <div class="prize-sub">Includes Continuous Weekly & Monthly Payouts</div>
+    <div class="prize-checks">
+      <div class="prize-check"><span class="ck">✓</span> Invite Friends & Build Your Team</div>
+      <div class="prize-check"><span class="ck">✓</span> Daily games for Aura prizes</div>
+      <div class="prize-check"><span class="ck">✓</span> Dominate the 182-Game Season</div>
+      <div class="prize-check"><span class="ck">✓</span> Quick Picks & Real Competition</div>
+    </div>
+    <a href="https://benchbrawl.com/auth/auth0" class="btn-cta">GET STARTED</a>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="hiw">
+  <h2 class="sec-title anim">HOW IT <span class="gold">WORKS</span></h2>
+  <div class="steps">
+    <div class="step anim">
+      <div class="step-num">1</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#d4a82a" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg></div>
+      <h3>Pick Your Games</h3>
+      <p>Choose the league, set up to 8 categories & lineups</p>
+    </div>
+    <div class="step anim" style="transition-delay:0.1s">
+      <div class="step-num">2</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#d4a82a" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="#d4a82a"/></svg></div>
+      <h3>Submit Your Picks</h3>
+      <p>Take your picks against real pick makers. No loss in crisis.</p>
+    </div>
+    <div class="step anim" style="transition-delay:0.2s">
+      <div class="step-num">3</div>
+      <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#d4a82a" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+      <h3>Win Cash Prizes</h3>
+      <p>$ in low investment risk — up to $2,000 earn most costs</p>
+    </div>
+  </div>
+</section>
+
+<!-- REFERRAL -->
+<section class="referral">
+  <div class="ref-box anim">
+    <div class="ref-sub">TEXAS FRIENDS &</div>
+    <div class="sec-title" style="margin-bottom:4px">REFERRAL <span class="gold">PROGRAM</span></div>
+    <p style="font-size:10px;color:#d4a82a;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">BUILD YOUR LONE STAR LINEUP · INVITE FRIENDS & EARN</p>
+    <p class="ref-desc">Share your unique link and form private leagues with friends.<br>Get a <strong>$25 deposit bonus</strong> for every friend who joins. The more you invite, the more you earn together!</p>
+    <div class="ref-link">
+      <span>Share link:</span>
+      <input type="text" value="https://icare.com/in287598/" readonly id="refLink">
+      <button class="btn-copy" onclick="copyLink()">📋 Copy</button>
+    </div>
+  </div>
+</section>
+
+<!-- PAST WINNERS -->
+<section class="winners">
+  <h2 class="sec-title anim">PAST <span class="gold">WINNERS</span></h2>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this)">Weekly</button>
+    <button class="tab" onclick="switchTab(this)">Monthly</button>
+    <button class="tab" onclick="switchTab(this)">Season</button>
+  </div>
+  <div class="w-table anim">
+    <div class="w-hdr">
+      <div class="w-rank">#</div>
+      <div style="width:24px;margin-right:10px"></div>
+      <div class="w-name">Player</div>
+      <div class="w-weekly">Weekly</div>
+      <div class="w-season">Season</div>
+    </div>
+    <div class="w-row" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="w-rank">1</div>
+      <div class="w-team" style="background:#003278">T</div>
+      <div class="w-name">Mike <span class="blur">████</span></div>
+      <div class="w-weekly">$1,000</div>
+      <div class="w-season">$1,050</div>
+    </div>
+    <div class="w-row" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="w-rank">2</div>
+      <div class="w-team" style="background:#002D62">T</div>
+      <div class="w-name">Hank <span class="blur">████</span></div>
+      <div class="w-weekly">$900</div>
+      <div class="w-season">$900</div>
+    </div>
+    <div class="w-row" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="w-rank">3</div>
+      <div class="w-team" style="background:#003278">T</div>
+      <div class="w-name">Chris <span class="blur">████</span></div>
+      <div class="w-weekly">$800</div>
+      <div class="w-season">$800</div>
+    </div>
+    <div class="w-row" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="w-rank">4</div>
+      <div class="w-team" style="background:#003278">T</div>
+      <div class="w-name">Lauren <span class="blur">████</span></div>
+      <div class="w-weekly">$650</div>
+      <div class="w-season">$850</div>
+    </div>
+    <div class="w-row" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="w-rank">5</div>
+      <div class="w-team" style="background:#003278">T</div>
+      <div class="w-name">Joe <span class="blur">████</span></div>
+      <div class="w-weekly">$550</div>
+      <div class="w-season">$850</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIZES BREAKDOWN -->
+<section class="breakdown">
+  <h2 class="sec-title anim">PRIZES <span class="gold">BREAKDOWN</span></h2>
+  <div class="bd-sub">A SEASON OF BIG PAYOUTS</div>
+  <div class="bd-grid anim">
+    <div class="bd-row">
+      <div class="bd-label"><b>Weekly Prizes:</b> Top Weekly Finisher</div>
+      <div class="bd-val">$1,000</div>
+    </div>
+    <div class="bd-row">
+      <div class="bd-label"><b>Monthly Prizes:</b> Top Monthly Finisher</div>
+      <div class="bd-val">$5,000</div>
+    </div>
+    <div class="bd-row">
+      <div class="bd-label"><b>Grand Prize:</b> Season Champion</div>
+      <div class="bd-val">$25,000</div>
+    </div>
+  </div>
+  <div class="bd-total anim">
+    <div class="bd-total-label">TOTAL PRIZE POOL OVER</div>
+    <div class="bd-total-val" id="prizeCounter">$100k</div>
+  </div>
+</section>
+
+<!-- LEADERBOARDS -->
+<section class="leaderboards">
+  <h2 class="sec-title anim">GLOBAL AURA <span class="gold">LEADERBOARDS</span></h2>
+  <div class="tabs lb-tabs">
+    <button class="tab active" onclick="switchTab(this)">Daily</button>
+    <button class="tab" onclick="switchTab(this)">Weekly</button>
+    <button class="tab" onclick="switchTab(this)">Total Aura</button>
+  </div>
+  <div class="lb-grid anim">
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">1</span><span class="lb-name">Strike Slite Knyp</span></div><div class="lb-aura">125,000</div></div>
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">6</span><span class="lb-name">Nammy Tokes</span></div><div class="lb-aura">45,000</div></div>
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">2</span><span class="lb-name">Lone Star Legends</span></div><div class="lb-aura">116,000</div></div>
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">7</span><span class="lb-name">Slow Block</span></div><div class="lb-aura">40,000</div></div>
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">3</span><span class="lb-name">Lone Star Stats</span></div><div class="lb-aura">100,000</div></div>
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">8</span><span class="lb-name">Constellations</span></div><div class="lb-aura">35,000</div></div>
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">4</span><span class="lb-name">Lone Star Series</span></div><div class="lb-aura">100,000</div></div>
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">9</span><span class="lb-name">Team Texan</span></div><div class="lb-aura">25,000</div></div>
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">5</span><span class="lb-name">Athletix Series</span></div><div class="lb-aura">95,000</div></div>
+    <div class="lb-item"><div class="lb-l"><span class="lb-rank">10</span><span class="lb-name">Athletix Series</span></div><div class="lb-aura">95,000</div></div>
+    <div class="lb-note"><span class="ck">✓</span> Play daily games based on aura for fastest fast play and bigger leaderboards.</div>
+  </div>
+</section>
+
+<!-- MLB DATA -->
+<section class="mlb-data">
+  <h2 class="sec-title anim">MLB SEASON DATA & <span class="gold">MATCHUPS</span></h2>
+  <table class="mlb-table anim">
+    <tr><th>ERA</th><th>Total Wins</th><th>PUTS</th><th>Averag.</th><th>aTC</th></tr>
+    <tr><td>ERA</td><td>12</td><td>109</td><td>12</td><td>0.81</td></tr>
+    <tr><td>ERA</td><td>12</td><td>109</td><td>12</td><td>0.81</td></tr>
+    <tr><th>EMC</th><th>Total stat.</th><th>Net.</th><th>Average</th><th>Max</th></tr>
+    <tr><td>3.36</td><td>25</td><td>66</td><td>356</td><td class="gold">79</td></tr>
+  </table>
+</section>
+
+<!-- UPCOMING GAMES -->
+<section class="upcoming">
+  <h3 class="anim">UPCOMING LONE STAR SERIES <span class="gold">GAMES</span></h3>
+  <a href="https://benchbrawl.com/auth/auth0" class="game-card anim">
+    <div class="gm-team">
+      <div class="tm-badge" style="background:#003278;color:#fff">R</div>
+      Rangers vs Astros
+    </div>
+    <div class="gm-mid">
+      <div class="gm-label">Game 1</div>
+      <div class="gm-time">7:00pm</div>
+    </div>
+    <div class="gm-right">
+      <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">
+        <div class="tm-badge" style="background:#002D62;color:#fff;width:24px;height:24px;font-size:9px">Y</div>
+        <div>
+          <div class="team-name">Yankees</div>
+          <div class="gm-meta">Sep 18 · 8pm</div>
+        </div>
+      </div>
+    </div>
+  </a>
+  <a href="https://benchbrawl.com/auth/auth0" class="game-card anim">
+    <div class="gm-team">
+      <div class="tm-badge" style="background:#003278;color:#fff">R</div>
+      Rangers vs Astros
+    </div>
+    <div class="gm-mid">
+      <div class="gm-label">Game 2</div>
+      <div class="gm-time">7:00pm</div>
+    </div>
+    <div class="gm-right">
+      <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">
+        <div class="tm-badge" style="background:#005A9C;color:#fff;width:24px;height:24px;font-size:9px">D</div>
+        <div>
+          <div class="team-name">Dodgers</div>
+          <div class="gm-meta">Sep 17 · 4pm</div>
+        </div>
+      </div>
+    </div>
+  </a>
+</section>
+
+<!-- OTHER SCHEDULE -->
+<section class="other-sched">
+  <h3 class="anim">OTHER POPULAR TEAMS <span class="gold">HILB SCHEDULE</span></h3>
+  <div class="sched-grid">
+    <div class="sched-item anim" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="sched-badge" style="background:#002D62">Y</div>
+      <div class="sched-info"><div class="sched-tm">Yankees</div><div class="sched-sub">Scheduled Game · Sep 18, 8pm</div></div>
+    </div>
+    <div class="sched-item anim" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="sched-badge" style="background:#BD3039">B</div>
+      <div class="sched-info"><div class="sched-tm">Red Sox</div><div class="sched-sub">Scheduled Game</div></div>
+    </div>
+    <div class="sched-item anim" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="sched-badge" style="background:#002D62">Y</div>
+      <div class="sched-info"><div class="sched-tm">Yankees</div><div class="sched-sub">Sep 18 · 8pm</div></div>
+    </div>
+    <div class="sched-item anim" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="sched-badge" style="background:#0E3386">C</div>
+      <div class="sched-info"><div class="sched-tm">Cubs</div><div class="sched-sub">Scheduled Game</div></div>
+    </div>
+    <div class="sched-item anim" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="sched-badge" style="background:#BA0021">S</div>
+      <div class="sched-info"><div class="sched-tm">Suka</div><div class="sched-sub">Sep 03 · 8pm</div></div>
+    </div>
+    <div class="sched-item anim" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="sched-badge" style="background:#BA0021">S</div>
+      <div class="sched-info"><div class="sched-tm">Suka</div><div class="sched-sub">Scheduled Game</div></div>
+    </div>
+    <div class="sched-item anim" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="sched-badge" style="background:#BD3039">B</div>
+      <div class="sched-info"><div class="sched-tm">Red Sox</div><div class="sched-sub">Sep 05 · 8pm</div></div>
+    </div>
+    <div class="sched-item anim" onclick="location.href='https://benchbrawl.com/auth/auth0'">
+      <div class="sched-badge" style="background:#BD3039">T</div>
+      <div class="sched-info"><div class="sched-tm">Red Sox</div><div class="sched-sub">Scheduled Game</div></div>
+    </div>
+    <div class="sched-total anim">
+      <div class="lbl">TOTAL MLB GAMES:</div>
+      <div class="val">2,430+</div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNDING -->
+<section class="funding">
+  <h2 class="sec-title anim">EASY FUNDING & <span class="gold">REDEMPTION</span></h2>
+  <div class="fund-section anim">
+    <div class="fund-labels">
+      <div class="fund-label">TO GAME (DEPOSIT)</div>
+      <div class="fund-label">USDT/USDC STABLECOINS</div>
+    </div>
+    <div class="fund-row">
+      <div class="fund-box"><div class="fund-icon paypal">P</div><div class="fund-txt">PayPal</div></div>
+      <div class="fund-arrow">➜</div>
+      <div class="fund-box"><div class="fund-icon usdt">$</div><div class="fund-txt">USDT/USDC</div></div>
+    </div>
+    <div class="fund-desc">
+      <span></span>
+      <span>Secure and instant transfers, no fees, and stablecoins</span>
+    </div>
+  </div>
+  <div class="fund-section anim">
+    <div class="fund-label">FROM GAME (REDEMPTION)</div>
+    <div class="fund-row">
+      <div class="fund-box"><div class="fund-icon usdt">$</div><div class="fund-txt">Stablecoins</div></div>
+      <div class="fund-arrow">➜</div>
+      <div class="fund-box"><div class="fund-icon paypal">P</div><div class="fund-txt">PayPal</div></div>
+    </div>
+    <div class="fund-desc">
+      <span>Secure and instant transfers, no fees, and stablecoins</span>
+      <span>Secure and instant transfers, no fees, and stablecoins</span>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <h2 class="sec-title anim">REAL TALK FROM <span class="gold">PLAYERS</span></h2>
+  <div class="test-grid">
+    <div class="test-card anim">
+      <div class="test-txt">"The team said to Swine we learn players! has Two Tier and he is crips at any time."</div>
+      <div class="test-author">Player Testimonial 01</div>
+    </div>
+    <div class="test-card anim">
+      <div class="test-txt">"Compulsory mining corn fun as load time just less then he is down be 14 time."</div>
+      <div class="test-author">Player Testimonial 02</div>
+    </div>
+    <div class="test-card anim">
+      <div class="test-txt">"I've neverminded and so if the learner by cane, Rex memorial has it's time."</div>
+      <div class="test-author">Player Testimonial 01</div>
+    </div>
+    <div class="test-card anim">
+      <div class="test-txt">"Test costume games beard and more into them in a crume, it's no."</div>
+      <div class="test-author">Player Testimonial 03</div>
+    </div>
+  </div>
+  <div class="verified anim">✓ Verified Player Testimonials</div>
+</section>
+
+<!-- FOOTER CTA -->
+<section class="footer-cta">
+  <div class="footer-teams anim">
+    <div class="ft-team" style="border-color:#003278">
+      <svg width="36" height="36" viewBox="0 0 36 36"><text x="18" y="24" text-anchor="middle" font-family="Oswald" font-size="20" font-weight="900" fill="#003278">T</text><path d="M18 4l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z" fill="#003278" opacity="0.3"/></svg>
+    </div>
+    <div class="ft-team" style="border-color:#EB6E1F">
+      <svg width="36" height="36" viewBox="0 0 36 36"><text x="18" y="24" text-anchor="middle" font-family="Oswald" font-size="20" font-weight="900" fill="#EB6E1F">H</text><path d="M18 4l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z" fill="#EB6E1F" opacity="0.3"/></svg>
+    </div>
+  </div>
+  <h2 class="anim">TEXAS IS <span class="gold">READY.</span></h2>
+  <div class="sub anim">SHOW YOUR SUPPORT AND <span class="gold">WIN BIG!</span></div>
+  <div class="count anim">Across <span>2,430+</span> Total Games!</div>
+  <div class="footer-share anim" style="margin-top:16px;">
+    <p>Share your unique link and form private leagues with friends.<br>Get a <strong>$25 deposit bonus</strong> for every friend who joins. The more you invite, the more you earn together!</p>
+    <div class="ref-link" style="margin-top:10px">
+      <span>Share link:</span>
+      <input type="text" value="https://icare.com/in287598/" readonly>
+      <button class="btn-copy" onclick="copyLink()">📋 Copy</button>
+    </div>
+  </div>
+  <div class="watermark">BENCHBRAWL</div>
+</section>
+
+</div><!-- .page -->
+
+<!-- Toast -->
+<div class="toast" id="toast">Link copied to clipboard!</div>
+
+<script>
+// Scroll animations - using scroll listener as fallback for reliability
+function checkVisibility() {
+  const els = document.querySelectorAll('.anim:not(.vis)');
+  els.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 30 && rect.bottom > 0) {
+      el.classList.add('vis');
+    }
+  });
+}
+// Run on scroll, resize, and immediately
+window.addEventListener('scroll', checkVisibility, {passive:true});
+window.addEventListener('resize', checkVisibility);
+// Initial check after a short delay for DOM paint
+checkVisibility();
+setTimeout(checkVisibility, 100);
+setTimeout(checkVisibility, 500);
+
+// Also use IntersectionObserver where supported
+if ('IntersectionObserver' in window) {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+  }, {threshold: 0.05});
+  document.querySelectorAll('.anim').forEach(el => obs.observe(el));
+}
+
+// Tabs
+function switchTab(btn){
+  const tabs=btn.parentElement;
+  tabs.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const section=tabs.closest('section');
+  const content=section.querySelector('.w-table,.lb-grid');
+  if(content){content.style.opacity='0';content.style.transform='translateY(8px)';setTimeout(()=>{content.style.transition='all 0.3s';content.style.opacity='1';content.style.transform='translateY(0)'},80);}
+}
+
+// Copy
+function copyLink(){
+  const inp=document.getElementById('refLink');
+  if(inp){navigator.clipboard.writeText(inp.value).catch(()=>{inp.select();document.execCommand('copy')});}
+  const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// Counter
+const pc=document.getElementById('prizeCounter');
+const pcObs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){let c=0;const iv=setInterval(()=>{c+=2;if(c>=100){c=100;clearInterval(iv)}pc.textContent='$'+c+'k'},16);pcObs.unobserve(el.target)}})},{threshold:0.5});
+pcObs.observe(pc);
+</script>
+</body>
+</html>
